@@ -1,4 +1,4 @@
-import { featuredMovie, trendingMovies, newReleases } from "@/lib/mockData";
+import { getMovieDetails } from "@/lib/tmdb";
 import VideoPlayerClient from "./VideoPlayerClient";
 
 export default async function WatchPage({
@@ -8,14 +8,13 @@ export default async function WatchPage({
 }) {
   const { id } = await params;
   
-  // Find the movie from our mock data
-  const allMovies = [featuredMovie, ...trendingMovies, ...newReleases];
-  const movie = allMovies.find((m) => m.id === id);
+  // Fetch movie from TMDB
+  const movie = await getMovieDetails(id);
 
   if (!movie) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-black text-white">
-        <h1 className="text-2xl font-bold">Movie not found</h1>
+        <h1 className="text-2xl font-bold font-heading">Movie not found</h1>
       </div>
     );
   }

@@ -8,6 +8,9 @@ export interface Movie {
   posterUrl: string;
   backdropUrl: string;
   fileId: string;
+  rating?: number;
+  quality?: string;
+  type?: string;
 }
 
 export const featuredMovie: Movie = {

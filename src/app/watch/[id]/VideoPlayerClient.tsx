@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import VideoPlayer from "@/components/VideoPlayer";
-import { Movie } from "@/lib/mockData";
+import { Movie } from "@/types/tmdb";
 import Player from "video.js/dist/types/player";
 
 interface VideoPlayerClientProps {

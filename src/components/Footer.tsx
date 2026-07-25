@@ -3,10 +3,10 @@ import { Globe, Mail, MessageCircle, Info } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="w-full relative mt-20 border-t border-white/10 bg-[#141414]/80 backdrop-blur-md shadow-[0_-10px_30px_rgba(229,9,20,0.1)]">
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent -z-10" />
+    <footer className="relative mt-20 mb-6 mx-6 md:mx-12 rounded-[2rem] border border-white/10 bg-[#141414]/60 backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-t from-brand/5 via-transparent to-transparent -z-10" />
       
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-16 relative z-10">
+      <div className="w-full px-8 md:px-16 py-12 md:py-16 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
           <div>
             <h2 className="text-brand font-black text-3xl tracking-tighter drop-shadow-[0_0_15px_rgba(229,9,20,0.6)] mb-4">
