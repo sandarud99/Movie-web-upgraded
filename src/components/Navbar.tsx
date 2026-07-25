@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Bell, User } from "lucide-react";
+import { Bell, User } from "lucide-react";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,9 +55,7 @@ export default function Navbar() {
           </nav>
         </div>
         <div className="flex items-center gap-4 text-gray-300">
-          <button className="hover:text-white transition-all p-2 hover:bg-brand/20 hover:border-brand/50 rounded-full backdrop-blur-sm border border-transparent hover:shadow-[0_0_15px_rgba(229,9,20,0.5)]">
-            <Search className="w-5 h-5" />
-          </button>
+          <SearchBar />
           <button className="hover:text-white transition-all p-2 hover:bg-brand/20 hover:border-brand/50 rounded-full backdrop-blur-sm border border-transparent hover:shadow-[0_0_15px_rgba(229,9,20,0.5)]">
             <Bell className="w-5 h-5" />
           </button>

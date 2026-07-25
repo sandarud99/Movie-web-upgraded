@@ -4,7 +4,7 @@ const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 // Map TMDB genre IDs to strings
-const genreMap: Record<number, string> = {
+export const genreMap: Record<number, string> = {
   28: "Action",
   12: "Adventure",
   16: "Animation",
@@ -50,8 +50,8 @@ export function adaptTMDBMovie(tmdb: TMDBMovie): Movie {
     year,
     genre: getGenresFromIds(tmdb.genre_ids),
     duration: "2h 15m", // TMDB doesn't return runtime in standard lists
-    posterUrl: tmdb.poster_path ? `https://image.tmdb.org/t/p/w500${tmdb.poster_path}` : "https://via.placeholder.com/500x750?text=No+Poster",
-    backdropUrl: tmdb.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdb.backdrop_path}` : "https://via.placeholder.com/1920x1080?text=No+Backdrop",
+    posterUrl: tmdb.poster_path && tmdb.poster_path !== "null" ? `https://image.tmdb.org/t/p/w500${tmdb.poster_path}` : "https://placehold.co/500x750/141414/FFF?text=No+Poster",
+    backdropUrl: tmdb.backdrop_path && tmdb.backdrop_path !== "null" ? `https://image.tmdb.org/t/p/original${tmdb.backdrop_path}` : "https://placehold.co/1920x1080/141414/FFF?text=No+Backdrop",
     rating: tmdb.vote_average ? parseFloat(tmdb.vote_average.toFixed(1)) : 0,
     quality,
     type: tmdb.media_type === "tv" ? "SERIES" : "MOVIE",
@@ -90,6 +90,19 @@ export async function getTopRatedMovies(): Promise<Movie[]> {
 export async function getNewReleases(): Promise<Movie[]> {
   const data = await fetchFromTMDB("/movie/now_playing");
   return data.results.map(adaptTMDBMovie);
+}
+
+export async function discoverMovies(filters: Record<string, string>): Promise<Movie[]> {
+  const data = await fetchFromTMDB("/discover/movie", filters);
+  return data.results.map(adaptTMDBMovie);
+}
+
+export async function searchMulti(query: string): Promise<Movie[]> {
+  const data = await fetchFromTMDB("/search/multi", { query });
+  // Filter out people or other media types that aren't movie/tv
+  return data.results
+    .filter((item: any) => item.media_type === "movie" || item.media_type === "tv")
+    .map(adaptTMDBMovie);
 }
 
 export async function getMovieDetails(id: string): Promise<Movie | null> {

@@ -3,6 +3,8 @@ import { Outfit, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SpotlightOverlay from "@/components/SpotlightOverlay";
+import Sidebar from "@/components/Sidebar";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -30,6 +32,8 @@ export default function RootLayout({
         className={`${outfit.variable} ${dmSans.variable} antialiased`}
       >
         <Navbar />
+        <Sidebar />
+        <SpotlightOverlay />
         {children}
         <Footer />
       </body>

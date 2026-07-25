@@ -18,12 +18,15 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <motion.div
       whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.2 }}
-      className="relative group cursor-pointer aspect-[2/3] rounded-2xl overflow-hidden bg-gray-900 border border-white/20 hover:shadow-[0_0_30px_rgba(229,9,20,0.5)] transition-all duration-300 hover:border-brand/50"
+      className="movie-card relative group cursor-pointer aspect-[2/3] rounded-2xl overflow-hidden bg-gray-900 border border-white/20 hover:shadow-[0_0_30px_rgba(229,9,20,0.5)] transition-all duration-300 hover:border-brand/50"
     >
       <img
         src={movie.posterUrl}
         alt={movie.title}
         className="w-full h-full object-cover"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?q=80&w=500&auto=format&fit=crop";
+        }}
       />
       
       {/* Top Badges */}

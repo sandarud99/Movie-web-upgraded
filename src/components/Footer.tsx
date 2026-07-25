@@ -33,34 +33,18 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-sm text-gray-400">
-          <div className="flex flex-col gap-3">
-            <Link href="#" className="hover:text-white transition-colors">Audio Description</Link>
-            <Link href="#" className="hover:text-white transition-colors">Investor Relations</Link>
-            <Link href="#" className="hover:text-white transition-colors">Legal Notices</Link>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Link href="#" className="hover:text-white transition-colors">Help Center</Link>
-            <Link href="#" className="hover:text-white transition-colors">Jobs</Link>
-            <Link href="#" className="hover:text-white transition-colors">Cookie Preferences</Link>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Link href="#" className="hover:text-white transition-colors">Gift Cards</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Use</Link>
-            <Link href="#" className="hover:text-white transition-colors">Corporate Information</Link>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Link href="#" className="hover:text-white transition-colors">Media Center</Link>
-            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Contact Us</Link>
-          </div>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 mb-12 text-sm text-gray-400">
+          <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-white/10 text-gray-500 text-xs">
-          <p>&copy; {new Date().getFullYear()} 9ineflix, Inc.</p>
+          <p>&copy; {new Date().getFullYear()} 9ineflix, Inc. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

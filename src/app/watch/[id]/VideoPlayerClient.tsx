@@ -13,9 +13,26 @@ export default function VideoPlayerClient({ movie }: VideoPlayerClientProps) {
   const [videoUrl, setVideoUrl] = useState<string>("");
 
   useEffect(() => {
-    // In a real application, you would fetch the streaming URL from your API.
+    // Save to local watch history
+    try {
+      const historyStr = localStorage.getItem("watchHistory") || "[]";
+      let history = JSON.parse(historyStr);
+      
+      // Remove if it already exists so we can bump it to the top
+      history = history.filter((m: Movie) => m.id !== movie.id);
+      
+      // Add to beginning of array
+      history.unshift(movie);
+      
+      // Keep only the last 50 items
+      if (history.length > 50) history = history.slice(0, 50);
+      
+      localStorage.setItem("watchHistory", JSON.stringify(history));
+    } catch (e) {
+      console.error("Failed to save history", e);
+    }
+
     // Example: fetch(`/api/stream/${movie.id}`)
-    // For this mock, we'll use a sample public video URL.
     setVideoUrl("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
   }, [movie]);
 
