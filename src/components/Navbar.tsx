@@ -37,14 +37,14 @@ export default function Navbar() {
             </h1>
           </Link>
           <nav className="hidden lg:flex gap-6 text-sm font-medium text-gray-300">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="/tv-shows" className="hover:text-white transition-colors">
               TV Shows
             </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="/movies" className="hover:text-white transition-colors">
               Movies
+            </Link>
+            <Link href="/anime" className="hover:text-white transition-colors">
+              Anime
             </Link>
             <Link href="#" className="hover:text-white transition-colors">
               New & Popular

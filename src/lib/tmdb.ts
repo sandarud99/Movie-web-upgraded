@@ -92,6 +92,26 @@ export async function getNewReleases(): Promise<Movie[]> {
   return data.results.map(adaptTMDBMovie);
 }
 
+export async function getTVShows(): Promise<Movie[]> {
+  const data = await fetchFromTMDB("/discover/tv", { sort_by: "popularity.desc" });
+  return data.results.map(adaptTMDBMovie);
+}
+
+export async function getMovies(): Promise<Movie[]> {
+  const data = await fetchFromTMDB("/discover/movie", { sort_by: "popularity.desc" });
+  return data.results.map(adaptTMDBMovie);
+}
+
+export async function getAnime(): Promise<Movie[]> {
+  // TMDB Animation Genre is 16, Japanese is 'ja'
+  const data = await fetchFromTMDB("/discover/tv", { 
+    with_genres: "16", 
+    with_original_language: "ja", 
+    sort_by: "popularity.desc" 
+  });
+  return data.results.map(adaptTMDBMovie);
+}
+
 export async function discoverMovies(filters: Record<string, string>): Promise<Movie[]> {
   const data = await fetchFromTMDB("/discover/movie", filters);
   return data.results.map(adaptTMDBMovie);
