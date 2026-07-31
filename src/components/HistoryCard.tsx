@@ -10,7 +10,7 @@ interface HistoryCardProps {
 }
 
 export default function HistoryCard({ movie }: HistoryCardProps) {
-  const rating = movie.rating || (Math.random() * 3 + 6).toFixed(1);
+  const rating = movie.rating || ((parseInt(movie.id) % 30) / 10 + 6).toFixed(1);
 
   return (
     <Link href={`/watch/${movie.id}`}>

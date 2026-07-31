@@ -24,7 +24,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed left-6 top-1/2 -translate-y-1/2 z-[60] flex flex-col items-center gap-4">
+    <div className="fixed left-2 top-1/2 -translate-y-1/2 z-[60] flex flex-col items-center gap-4">
       {/* Pill Glass Island */}
       <div className="bg-black/40 backdrop-blur-3xl border border-white/5 rounded-full p-1 flex flex-col gap-1 shadow-2xl shadow-black/80 w-12">
         {menuItems.map((item) => {

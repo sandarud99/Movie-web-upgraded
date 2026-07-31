@@ -10,8 +10,8 @@ interface MovieCardProps {
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
-  const rating = movie.rating || (Math.random() * 3 + 6).toFixed(1);
-  const quality = movie.quality || ["WEB-RIP", "HD-RIP", "BLURAY"][Math.floor(Math.random() * 3)];
+  const rating = movie.rating || ((parseInt(movie.id) % 30) / 10 + 6).toFixed(1);
+  const quality = movie.quality || ["WEB-RIP", "HD-RIP", "BLURAY"][parseInt(movie.id) % 3];
   const type = movie.type || "MOVIE";
 
   return (
