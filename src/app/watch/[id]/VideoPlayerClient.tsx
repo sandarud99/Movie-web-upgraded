@@ -37,10 +37,11 @@ export default function VideoPlayerClient({ movie }: VideoPlayerClientProps) {
   }, [movie]);
 
   const playerOptions = {
-    autoplay: true,
+    autoplay: false, // Let user click play
     controls: true,
     responsive: true,
     fluid: true,
+    poster: movie.backdropUrl,
     sources: [
       {
         src: videoUrl,

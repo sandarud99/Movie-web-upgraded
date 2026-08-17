@@ -16,9 +16,14 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.2 }}
-      className="movie-card relative group cursor-pointer aspect-[2/3] rounded-2xl overflow-hidden bg-gray-900 border border-white/20 hover:shadow-[0_0_30px_rgba(229,9,20,0.5)] transition-all duration-300 hover:border-brand/50"
+      whileHover={{ 
+        scale: 1.05, 
+        y: -5,
+        boxShadow: "0px 10px 40px rgba(229, 9, 20, 0.5)",
+        borderColor: "rgba(229, 9, 20, 0.5)"
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="movie-card relative group cursor-pointer aspect-[2/3] rounded-2xl overflow-hidden bg-gray-900 border border-white/20"
     >
       <img
         src={movie.posterUrl}
@@ -56,7 +61,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
       </div>
 
       {/* Hover Play Overlay */}
-      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center z-10">
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col justify-center items-center z-10">
         <Link href={`/watch/${movie.id}`}>
           <div className="bg-brand text-white p-4 rounded-full hover:scale-110 hover:shadow-[0_0_20px_rgba(229,9,20,0.8)] transition-all">
             <Play className="w-8 h-8 fill-white" />

@@ -14,12 +14,16 @@ export default async function Home({
   const resolvedParams = await searchParams;
   const year = typeof resolvedParams.year === 'string' ? resolvedParams.year : undefined;
   const sort = typeof resolvedParams.sort === 'string' ? resolvedParams.sort : undefined;
+  const category = typeof resolvedParams.category === 'string' ? resolvedParams.category : undefined;
 
   const hasFilters = year || sort;
 
-  // Always fetch trending for the Hero slider
-  const trendingMovies = await getTrendingMovies();
-  const heroMovies = trendingMovies.slice(0, 5);
+  // Always fetch generic trending for the Hero slider
+  const genericTrending = await getTrendingMovies();
+  const heroMovies = genericTrending.slice(0, 5);
+
+  // Fetch categorized sections
+  const trendingMovies = category ? await getTrendingMovies(category) : genericTrending;
 
   let filteredMovies: Movie[] = [];
   let topRatedMovies: Movie[] = [];
@@ -38,8 +42,8 @@ export default async function Home({
     
     filteredMovies = [...page1, ...page2];
   } else {
-    topRatedMovies = await getTopRatedMovies();
-    newReleases = await getNewReleases();
+    topRatedMovies = await getTopRatedMovies(category);
+    newReleases = await getNewReleases(category);
   }
 
   return (
@@ -53,9 +57,9 @@ export default async function Home({
           <SearchResults initialMovies={filteredMovies} filters={{ primary_release_year: year || "", sort_by: sort || "" }} />
         ) : (
           <>
-            <MovieGrid title="Trending Now" movies={trendingMovies.slice(0, 14)} />
-            <MovieGrid title="Top Rated" movies={topRatedMovies.slice(0, 14)} />
-            <MovieGrid title="New Releases" movies={newReleases.slice(0, 14)} />
+            <MovieGrid section="trending" category={category} title={category ? `Trending ${category}` : "Trending Now"} movies={trendingMovies} />
+            <MovieGrid section="top-rated" category={category} title={category ? `Top Rated ${category}` : "Top Rated"} movies={topRatedMovies} />
+            <MovieGrid section="new-releases" category={category} title={category ? `New ${category}` : "New Releases"} movies={newReleases} />
           </>
         )}
       </div>

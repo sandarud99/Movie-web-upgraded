@@ -25,7 +25,7 @@ export default function CategoryHero({ movies }: CategoryHeroProps) {
   const movie = movies[currentIndex];
 
   return (
-    <div className="relative w-full h-[400px] bg-gray-900 rounded-3xl overflow-hidden mb-12 shadow-2xl shadow-black/50 border border-white/5">
+    <div className="relative w-full h-[400px] md:h-[450px] bg-gray-900 rounded-3xl overflow-hidden mb-8 md:mb-12 shadow-2xl shadow-black/50 border border-white/5">
       <AnimatePresence mode="wait">
         <motion.div
           key={movie.id}
@@ -45,46 +45,60 @@ export default function CategoryHero({ movies }: CategoryHeroProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="relative h-full flex flex-col justify-end p-8 md:p-12 z-10 w-full md:w-3/4">
+      <div className="relative h-full flex flex-col justify-end p-6 pb-12 md:p-12 z-10 w-full md:w-3/4">
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${movie.id}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { 
+                opacity: 1,
+                transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+              },
+              exit: { opacity: 0, transition: { duration: 0.2 } }
+            }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="flex flex-col items-center md:items-start text-center md:text-left"
           >
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 shadow-sm font-heading">
+            <motion.h2 
+              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 20 } } }}
+              className="text-3xl leading-tight md:text-5xl font-black text-white mb-4 shadow-sm font-heading"
+            >
               {movie.title}
-            </h2>
-            <p className="text-gray-300 text-sm md:text-base line-clamp-3 mb-8 max-w-2xl leading-relaxed">
+            </motion.h2>
+            <motion.p 
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 20 } } }}
+              className="text-gray-300 text-sm md:text-base line-clamp-3 mb-8 max-w-2xl leading-relaxed mx-auto md:mx-0"
+            >
               {movie.description}
-            </p>
-            <div className="flex items-center gap-4">
+            </motion.p>
+            <motion.div 
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 20 } } }}
+              className="flex items-center gap-4"
+            >
               <Link
                 href={`/watch/${movie.id}`}
-                className="flex items-center justify-center gap-2 bg-[#ff4060] text-white px-6 py-3 rounded-full font-bold hover:bg-[#ff4060]/80 transition-all w-32 md:w-40 shadow-[0_0_15px_rgba(255,64,96,0.5)] hover:-translate-y-1"
+                className="flex items-center justify-center gap-2 bg-brand text-white px-8 py-3 rounded-full font-bold hover:bg-brand/80 transition-all w-auto whitespace-nowrap shadow-[0_0_15px_rgba(229,9,20,0.5)] hover:-translate-y-1"
               >
                 <Play className="w-5 h-5 fill-white" />
                 Play Now
               </Link>
-              <button className="flex items-center justify-center bg-white/10 text-white px-6 py-3 rounded-full font-bold hover:bg-white/20 transition-all backdrop-blur-md border border-white/20 hover:border-white/40">
-                More Info
-              </button>
-            </div>
+            </motion.div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Navigation Dots */}
-      <div className="absolute bottom-8 right-8 z-20 flex gap-2">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 md:left-auto md:right-8 -translate-x-1/2 md:-translate-x-0 z-20 flex gap-2">
         {movies.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
               index === currentIndex
-                ? "bg-[#ff4060] w-6 shadow-[0_0_10px_rgba(255,64,96,0.8)]"
+                ? "bg-brand w-6 shadow-[0_0_10px_rgba(229,9,20,0.8)]"
                 : "bg-white/30 hover:bg-white/60"
             }`}
             aria-label={`Go to slide ${index + 1}`}

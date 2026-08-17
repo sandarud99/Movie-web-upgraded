@@ -6,13 +6,12 @@ import { Lightbulb, LightbulbOff } from "lucide-react";
 
 export default function SpotlightOverlay() {
   const [isHovering, setIsHovering] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(false);
   const pathname = usePathname();
   const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Only enable on root or search pages where grids exist
-    if (pathname !== "/" && !pathname.startsWith("/search")) return;
+    // Spotlight works on all pages now
     if (!isEnabled) {
       setIsHovering(false);
       return;
@@ -50,8 +49,7 @@ export default function SpotlightOverlay() {
     };
   }, [pathname, isEnabled]);
 
-  // Don't render anything if we're not on a valid page
-  if (pathname !== "/" && !pathname.startsWith("/search")) return null;
+  // The spotlight will now run on all pages where .movie-grid exists
 
   return (
     <div 

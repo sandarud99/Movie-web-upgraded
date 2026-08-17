@@ -1,14 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Globe, Mail, MessageCircle, Info } from "lucide-react";
 
 export default function Footer() {
+  const pathname = usePathname();
   return (
     <footer className="relative mt-20 mb-6 mx-6 md:mx-12 rounded-[2rem] border border-white/10 bg-[#141414]/60 backdrop-blur-2xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-brand/5 via-transparent to-transparent -z-10" />
       
       <div className="w-full px-8 md:px-16 py-12 md:py-16 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12 text-center md:text-left">
+          <div className="flex flex-col items-center md:items-start">
             <h2 className="text-brand font-black text-3xl tracking-tighter drop-shadow-[0_0_15px_rgba(229,9,20,0.6)] mb-4">
               9INEFLIX
             </h2>
@@ -34,17 +38,17 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 mb-12 text-sm text-gray-400">
-          <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
-          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-          <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
+          <Link href="/about" className={`transition-colors ${pathname === '/about' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>About Us</Link>
+          <Link href="/privacy" className={`transition-colors ${pathname === '/privacy' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Privacy Policy</Link>
+          <Link href="/terms" className={`transition-colors ${pathname === '/terms' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Terms of Service</Link>
+          <Link href="/contact" className={`transition-colors ${pathname === '/contact' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Contact Us</Link>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-white/10 text-gray-500 text-xs">
           <p>&copy; {new Date().getFullYear()} 9ineflix, Inc. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className={`transition-colors ${pathname === '/privacy' ? 'text-brand drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Privacy Policy</Link>
+            <Link href="/terms" className={`transition-colors ${pathname === '/terms' ? 'text-brand drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Terms of Service</Link>
           </div>
         </div>
       </div>

@@ -58,18 +58,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }, [playerRef]);
 
   return (
-    <div className="relative w-screen h-screen bg-black overflow-hidden group">
-      {/* Custom Header overlay that appears on hover/interaction */}
-      <div className="absolute top-0 left-0 w-full p-6 z-50 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button 
-          onClick={() => router.back()}
-          className="text-white hover:text-brand transition-colors"
-        >
-          <ArrowLeft className="w-8 h-8" />
-        </button>
-        {title && <h1 className="text-white text-xl font-bold">{title}</h1>}
-      </div>
-      
+    <div className="relative w-full h-full bg-black overflow-hidden group">
       <div data-vjs-player className="w-full h-full">
         <div ref={videoRef} className="w-full h-full [&>.video-js]:w-full [&>.video-js]:h-full" />
       </div>

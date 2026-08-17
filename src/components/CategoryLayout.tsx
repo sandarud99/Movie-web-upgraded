@@ -51,8 +51,8 @@ export default function CategoryLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-32 pb-24 px-6 md:px-8 lg:px-12">
-      <div className="max-w-[1600px] mx-auto flex flex-col xl:flex-row gap-8 xl:gap-12">
+    <div className="min-h-screen bg-[#0a0a0a] pt-24 md:pt-32 pb-24 px-6 md:px-12">
+      <div className="w-full flex flex-col xl:flex-row gap-8 xl:gap-12">
         
         {/* Left Column (Main Content) */}
         <div className="flex-1 min-w-0">
@@ -64,7 +64,7 @@ export default function CategoryLayout({
           <h2 className="text-3xl font-black text-white mb-6 font-heading tracking-tight">{title}</h2>
           
           {/* Custom Grid (no padding, fits container) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 md:gap-6 mb-12">
             {gridMovies.map((movie, index) => (
               <MovieCard key={`${movie.id}-${index}`} movie={movie} />
             ))}
@@ -87,7 +87,7 @@ export default function CategoryLayout({
                 href={buildPageUrl(num)}
                 className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold transition-colors ${
                   num === currentPage 
-                    ? "bg-[#ff4060] text-white shadow-md" 
+                    ? "bg-brand text-white shadow-md" 
                     : "bg-black/40 border border-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
                 }`}
               >

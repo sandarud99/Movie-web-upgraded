@@ -5,7 +5,8 @@ import { Movie, TMDBMovie } from "@/types/tmdb";
 import { Star, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { adaptTMDBMovie } from "@/lib/tmdb"; // Note: adaptTMDBMovie must be exported if not already. Wait, it IS exported in tmdb.ts.
+import { adaptTMDBMovie } from "@/lib/tmdb";
+import { CustomDropdown } from "./FilterBar";
 
 interface CategorySidebarProps {
   title: string;
@@ -64,13 +65,12 @@ export default function CategorySidebar({ title, items, category }: CategorySide
           endpoint = `https://api.themoviedb.org/3/${type}/top_rated?api_key=${apiKey}`;
         }
 
-        // Add anime filters if needed
         if (category === "Anime") {
           // If we are looking for Anime specifically, we shouldn't use trending/movie since it mixes everything.
           // Instead we must use discover/tv with animation genre.
           endpoint = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=16&with_original_language=ja`;
-          if (period === "Weekly") endpoint += "&sort_by=popularity.desc&first_air_date.gte=" + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-          else if (period === "Monthly") endpoint += "&sort_by=popularity.desc&first_air_date.gte=" + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          if (period === "Weekly") endpoint += "&sort_by=popularity.desc&air_date.gte=" + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          else if (period === "Monthly") endpoint += "&sort_by=popularity.desc&air_date.gte=" + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
           else endpoint += "&sort_by=vote_average.desc&vote_count.gte=1000";
         }
 
@@ -103,34 +103,45 @@ export default function CategorySidebar({ title, items, category }: CategorySide
       <div>
         <h3 className="text-white font-bold text-lg mb-4">Quick filter</h3>
         <div className="flex flex-col gap-3">
-          
           <div className="relative">
-            <select 
+            <CustomDropdown
+              label="Most Popular"
               value={currentSort}
-              onChange={handleSortChange}
-              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-sm text-gray-300 focus:outline-none focus:border-[#ff4060] transition-colors appearance-none cursor-pointer"
-            >
-              <option value="popularity.desc">Most Popular</option>
-              <option value="vote_average.desc">Highest Rated</option>
-              <option value="primary_release_date.desc">Newest First</option>
-            </select>
-            <ChevronDown className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              options={[
+                { label: "Most Popular", value: "popularity.desc" },
+                { label: "Highest Rated", value: "vote_average.desc" },
+                { label: "Newest First", value: "primary_release_date.desc" }
+              ]}
+              onChange={(val) => {
+                const params = new URLSearchParams(searchParams.toString());
+                params.set("sort", val);
+                params.delete("page");
+                router.push(`?${params.toString()}`);
+              }}
+              buttonClassName="w-full bg-black/40 border-white/10 rounded-lg px-4 py-3 text-sm text-gray-300 hover:border-brand"
+              widthClass="w-full"
+            />
           </div>
           
           <div className="relative">
-            <select 
+            <CustomDropdown
+              label="All Years"
               value={currentYear}
-              onChange={handleYearChange}
-              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-sm text-gray-300 focus:outline-none focus:border-[#ff4060] transition-colors appearance-none cursor-pointer"
-            >
-              <option value="">All Years</option>
-              {years.map(y => (
-                <option key={y} value={y.toString()}>{y}</option>
-              ))}
-            </select>
-            <ChevronDown className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              options={years.map(y => ({ label: y.toString(), value: y.toString() }))}
+              onChange={(val) => {
+                const params = new URLSearchParams(searchParams.toString());
+                if (val) {
+                  params.set("year", val);
+                } else {
+                  params.delete("year");
+                }
+                params.delete("page");
+                router.push(`?${params.toString()}`);
+              }}
+              buttonClassName="w-full bg-black/40 border-white/10 rounded-lg px-4 py-3 text-sm text-gray-300 hover:border-brand"
+              widthClass="w-full"
+            />
           </div>
-
         </div>
       </div>
 
@@ -146,7 +157,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
               onClick={() => setPeriod(p)}
               className={`flex-1 text-xs font-bold py-2 rounded-md transition-all ${
                 period === p 
-                  ? "bg-[#ff4060] text-white shadow-md" 
+                  ? "bg-brand text-white shadow-md" 
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -160,7 +171,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
           {topItems.map((item, index) => (
             <Link key={item.id} href={`/watch/${item.id}`} className="group flex items-center gap-4">
               {/* Rank Number */}
-              <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center border border-white/10 rounded-md text-gray-400 text-sm font-bold bg-black/30 group-hover:bg-[#ff4060] group-hover:text-white group-hover:border-[#ff4060] transition-colors">
+              <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center border border-white/10 rounded-md text-gray-400 text-sm font-bold bg-black/30 group-hover:bg-brand group-hover:text-white group-hover:border-brand transition-colors">
                 {index + 1}
               </div>
               
@@ -178,7 +189,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
 
               {/* Details */}
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-[#ff4060] transition-colors">
+                <h4 className="text-sm font-bold text-gray-200 truncate group-hover:text-brand transition-colors">
                   {item.title}
                 </h4>
                 <div className="flex items-center gap-2 mt-1">

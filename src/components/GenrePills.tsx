@@ -43,7 +43,7 @@ export default function GenrePills() {
   };
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-4 mb-6 scrollbar-hide">
+    <div className="flex flex-wrap gap-3 pb-4 mb-6">
       {genres.map((genre) => (
         <Link
           key={genre}

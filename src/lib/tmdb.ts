@@ -24,6 +24,9 @@ export const genreMap: Record<number, string> = {
   53: "Thriller",
   10752: "War",
   37: "Western",
+  10762: "Kids",
+  10763: "News",
+  10764: "Reality",
   10759: "Action & Adventure",
   10765: "Sci-Fi & Fantasy",
   10768: "War & Politics",
@@ -32,6 +35,11 @@ export const genreMap: Record<number, string> = {
 function getGenresFromIds(ids: number[]): string {
   if (!ids || ids.length === 0) return "Movie";
   return ids.map((id) => genreMap[id] || "Unknown").join(", ");
+}
+
+export function getGenreIdByName(name: string): string | undefined {
+  const entry = Object.entries(genreMap).find(([id, genreName]) => genreName.toLowerCase() === name.toLowerCase());
+  return entry ? entry[0] : undefined;
 }
 
 export function adaptTMDBMovie(tmdb: TMDBMovie): Movie {
@@ -55,6 +63,7 @@ export function adaptTMDBMovie(tmdb: TMDBMovie): Movie {
     rating: tmdb.vote_average ? parseFloat(tmdb.vote_average.toFixed(1)) : 0,
     quality,
     type: tmdb.media_type === "tv" ? "SERIES" : "MOVIE",
+    collectionId: tmdb.belongs_to_collection?.id || null,
   };
 }
 
@@ -77,18 +86,75 @@ async function fetchFromTMDB(endpoint: string, params: Record<string, string> = 
   return response.json();
 }
 
-export async function getTrendingMovies(): Promise<Movie[]> {
-  const data = await fetchFromTMDB("/trending/all/day");
+export async function getTrendingMovies(category?: string, page: number = 1): Promise<Movie[]> {
+  let endpoint = "/trending/all/day";
+  let params: Record<string, string> = { page: page.toString() };
+
+  if (category) {
+    if (category.toLowerCase() === "movies") {
+      endpoint = "/trending/movie/day";
+    } else if (category.toLowerCase() === "tv shows") {
+      endpoint = "/trending/tv/day";
+    } else if (category.toLowerCase() === "trending" || category === "18+") {
+      // Keep default endpoint for Trending/18+
+    } else {
+      const genreId = getGenreIdByName(category);
+      if (genreId) {
+        endpoint = "/discover/movie";
+        params = { sort_by: "popularity.desc", with_genres: genreId, page: page.toString() };
+      }
+    }
+  }
+
+  const data = await fetchFromTMDB(endpoint, params);
   return data.results.map(adaptTMDBMovie);
 }
 
-export async function getTopRatedMovies(): Promise<Movie[]> {
-  const data = await fetchFromTMDB("/movie/top_rated");
+export async function getTopRatedMovies(category?: string, page: number = 1): Promise<Movie[]> {
+  let endpoint = "/movie/top_rated";
+  let params: Record<string, string> = { page: page.toString() };
+
+  if (category) {
+    if (category.toLowerCase() === "movies") {
+      endpoint = "/movie/top_rated";
+    } else if (category.toLowerCase() === "tv shows") {
+      endpoint = "/tv/top_rated";
+    } else if (category.toLowerCase() === "trending" || category === "18+") {
+      // Keep default endpoint for Trending/18+
+    } else {
+      const genreId = getGenreIdByName(category);
+      if (genreId) {
+        endpoint = "/discover/movie";
+        params = { sort_by: "vote_average.desc", "vote_count.gte": "200", with_genres: genreId, page: page.toString() };
+      }
+    }
+  }
+
+  const data = await fetchFromTMDB(endpoint, params);
   return data.results.map(adaptTMDBMovie);
 }
 
-export async function getNewReleases(): Promise<Movie[]> {
-  const data = await fetchFromTMDB("/movie/now_playing");
+export async function getNewReleases(category?: string, page: number = 1): Promise<Movie[]> {
+  let endpoint = "/movie/now_playing";
+  let params: Record<string, string> = { page: page.toString() };
+
+  if (category) {
+    if (category.toLowerCase() === "movies") {
+      endpoint = "/movie/now_playing";
+    } else if (category.toLowerCase() === "tv shows") {
+      endpoint = "/tv/on_the_air"; // closest to now playing for TV
+    } else if (category.toLowerCase() === "trending" || category === "18+") {
+      // Keep default endpoint for Trending/18+
+    } else {
+      const genreId = getGenreIdByName(category);
+      if (genreId) {
+        endpoint = "/discover/movie";
+        params = { sort_by: "primary_release_date.desc", "vote_count.gte": "10", with_genres: genreId, page: page.toString() };
+      }
+    }
+  }
+
+  const data = await fetchFromTMDB(endpoint, params);
   return data.results.map(adaptTMDBMovie);
 }
 
@@ -118,24 +184,77 @@ export async function discoverMovies(filters: Record<string, string>): Promise<M
   return data.results.map(adaptTMDBMovie);
 }
 
-export async function searchMulti(query: string): Promise<Movie[]> {
-  const data = await fetchFromTMDB("/search/multi", { query });
+export async function searchMulti(query: string, page: number = 1): Promise<Movie[]> {
+  const data = await fetchFromTMDB("/search/multi", { query, page: page.toString() });
   // Filter out people or other media types that aren't movie/tv
   return data.results
     .filter((item: any) => item.media_type === "movie" || item.media_type === "tv")
     .map(adaptTMDBMovie);
 }
 
-export async function getMovieDetails(id: string): Promise<Movie | null> {
+export async function getMovieDetails(id: string, type: "movie" | "tv" = "movie"): Promise<Movie | null> {
   try {
-    const data = await fetchFromTMDB(`/movie/${id}`);
+    const data = await fetchFromTMDB(`/${type}/${id}`, { append_to_response: "videos" });
     
+    let trailerUrl: string | undefined;
+    if (data.videos && data.videos.results) {
+      const trailer = data.videos.results.find((v: any) => v.type === "Trailer" && v.site === "YouTube");
+      if (trailer) {
+        trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
+      }
+    }
+
     // Convert single movie data
     return {
       ...adaptTMDBMovie(data),
       duration: data.runtime ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m` : "Unknown",
+      trailerUrl,
     };
   } catch (error) {
     return null;
+  }
+}
+
+export async function getMovieCredits(id: string, type: "movie" | "tv" = "movie"): Promise<import("@/types/tmdb").CastMember[]> {
+  try {
+    const data = await fetchFromTMDB(`/${type}/${id}/credits`);
+    if (!data.cast) return [];
+    
+    return data.cast.slice(0, 15).map((member: any) => ({
+      id: member.id,
+      name: member.name,
+      character: member.character,
+      profileUrl: member.profile_path 
+        ? `https://image.tmdb.org/t/p/w185${member.profile_path}`
+        : "https://placehold.co/185x185/141414/FFF?text=No+Img",
+    }));
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getMovieImages(id: string, type: "movie" | "tv" = "movie"): Promise<import("@/types/tmdb").MovieImage[]> {
+  try {
+    // We don't specify language to ensure we get a lot of backdrops (many are null language)
+    const data = await fetchFromTMDB(`/${type}/${id}/images`, { include_image_language: 'en,null' });
+    if (!data.backdrops) return [];
+    
+    return data.backdrops.slice(0, 10).map((img: any) => ({
+      url: `https://image.tmdb.org/t/p/w780${img.file_path}`,
+    }));
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getMovieCollection(collectionId: number): Promise<Movie[]> {
+  try {
+    const data = await fetchFromTMDB(`/collection/${collectionId}`);
+    if (!data.parts) return [];
+    
+    // The parts array inside a collection contains movie objects similar to standard results
+    return data.parts.map(adaptTMDBMovie).sort((a: Movie, b: Movie) => (a.year || 0) - (b.year || 0));
+  } catch (error) {
+    return [];
   }
 }

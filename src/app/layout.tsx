@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SpotlightOverlay from "@/components/SpotlightOverlay";
-import Sidebar from "@/components/Sidebar";
+import SmoothScrolling from "@/components/SmoothScrolling";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,11 +31,12 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${dmSans.variable} antialiased`}
       >
-        <Navbar />
-        <Sidebar />
-        <SpotlightOverlay />
-        {children}
-        <Footer />
+        <SmoothScrolling>
+          <Navbar />
+          <SpotlightOverlay />
+          {children}
+          <Footer />
+        </SmoothScrolling>
       </body>
     </html>
   );

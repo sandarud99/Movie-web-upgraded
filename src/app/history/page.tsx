@@ -25,7 +25,7 @@ export default function HistoryPage() {
   const tvShows = history.filter((m) => m.type === "SERIES" || m.type === "tv");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#141414] pt-32 pb-24 px-6 md:px-12 lg:px-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#141414] pt-32 pb-24 px-6 md:px-12">
       
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">

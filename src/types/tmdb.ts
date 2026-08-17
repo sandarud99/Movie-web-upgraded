@@ -11,6 +11,19 @@ export interface Movie {
   rating?: number;
   quality?: string;
   type?: string;
+  collectionId?: number | null;
+  trailerUrl?: string;
+}
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profileUrl: string;
+}
+
+export interface MovieImage {
+  url: string;
 }
 
 export interface TMDBMovie {
@@ -25,4 +38,11 @@ export interface TMDBMovie {
   vote_average: number;
   genre_ids: number[];
   media_type?: string;
+  belongs_to_collection?: {
+    id: number;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+  } | null;
+  runtime?: number; // Added for duration
 }
