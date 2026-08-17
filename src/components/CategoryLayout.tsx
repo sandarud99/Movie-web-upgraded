@@ -51,7 +51,7 @@ export default function CategoryLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-24 md:pt-32 pb-24 px-6 md:px-12">
+    <div className="min-h-screen bg-[#0a0a0a] pt-24 md:pt-32 pb-24 px-6 md:px-12 relative">
       <div className="w-full flex flex-col xl:flex-row gap-8 xl:gap-12">
         
         {/* Left Column (Main Content) */}
@@ -112,6 +112,9 @@ export default function CategoryLayout({
         </aside>
 
       </div>
+      
+      {/* Gradient transition to match footer color smoothly */}
+      <div className="w-full h-48 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none absolute bottom-0 left-0" />
     </div>
   );
 }

@@ -42,7 +42,7 @@ export function getGenreIdByName(name: string): string | undefined {
   return entry ? entry[0] : undefined;
 }
 
-export function adaptTMDBMovie(tmdb: TMDBMovie): Movie {
+export function adaptTMDBMovie(tmdb: TMDBMovie, defaultType: "movie" | "tv" = "movie"): Movie {
   const title = tmdb.title || tmdb.name || "Unknown Title";
   const dateStr = tmdb.release_date || tmdb.first_air_date;
   const year = dateStr ? parseInt(dateStr.split("-")[0]) : new Date().getFullYear();
@@ -62,7 +62,7 @@ export function adaptTMDBMovie(tmdb: TMDBMovie): Movie {
     backdropUrl: tmdb.backdrop_path && tmdb.backdrop_path !== "null" ? `https://image.tmdb.org/t/p/original${tmdb.backdrop_path}` : "https://placehold.co/1920x1080/141414/FFF?text=No+Backdrop",
     rating: tmdb.vote_average ? parseFloat(tmdb.vote_average.toFixed(1)) : 0,
     quality,
-    type: tmdb.media_type === "tv" ? "SERIES" : "MOVIE",
+    type: tmdb.media_type === "tv" || defaultType === "tv" ? "SERIES" : "MOVIE",
     collectionId: tmdb.belongs_to_collection?.id || null,
   };
 }
@@ -107,7 +107,8 @@ export async function getTrendingMovies(category?: string, page: number = 1): Pr
   }
 
   const data = await fetchFromTMDB(endpoint, params);
-  return data.results.map(adaptTMDBMovie);
+  const defaultType = endpoint.includes("/tv") ? "tv" : "movie";
+  return data.results.map((m: any) => adaptTMDBMovie(m, defaultType));
 }
 
 export async function getTopRatedMovies(category?: string, page: number = 1): Promise<Movie[]> {
@@ -131,7 +132,8 @@ export async function getTopRatedMovies(category?: string, page: number = 1): Pr
   }
 
   const data = await fetchFromTMDB(endpoint, params);
-  return data.results.map(adaptTMDBMovie);
+  const defaultType = endpoint.includes("/tv") ? "tv" : "movie";
+  return data.results.map((m: any) => adaptTMDBMovie(m, defaultType));
 }
 
 export async function getNewReleases(category?: string, page: number = 1): Promise<Movie[]> {
@@ -155,12 +157,13 @@ export async function getNewReleases(category?: string, page: number = 1): Promi
   }
 
   const data = await fetchFromTMDB(endpoint, params);
-  return data.results.map(adaptTMDBMovie);
+  const defaultType = endpoint.includes("/tv") ? "tv" : "movie";
+  return data.results.map((m: any) => adaptTMDBMovie(m, defaultType));
 }
 
 export async function getTVShows(filters: Record<string, string> = {}): Promise<Movie[]> {
   const data = await fetchFromTMDB("/discover/tv", { sort_by: "popularity.desc", ...filters });
-  return data.results.map(adaptTMDBMovie);
+  return data.results.map((m: any) => adaptTMDBMovie(m, "tv"));
 }
 
 export async function getMovies(filters: Record<string, string> = {}): Promise<Movie[]> {
@@ -176,7 +179,7 @@ export async function getAnime(filters: Record<string, string> = {}): Promise<Mo
     sort_by: "popularity.desc",
     ...filters 
   });
-  return data.results.map(adaptTMDBMovie);
+  return data.results.map((m: any) => adaptTMDBMovie(m, "tv"));
 }
 
 export async function discoverMovies(filters: Record<string, string>): Promise<Movie[]> {
@@ -254,6 +257,62 @@ export async function getMovieCollection(collectionId: number): Promise<Movie[]>
     
     // The parts array inside a collection contains movie objects similar to standard results
     return data.parts.map(adaptTMDBMovie).sort((a: Movie, b: Movie) => (a.year || 0) - (b.year || 0));
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getTVShowDetails(id: string): Promise<Movie | null> {
+  try {
+    const data = await fetchFromTMDB(`/tv/${id}`, { append_to_response: "videos" });
+    
+    let trailerUrl: string | undefined;
+    if (data.videos && data.videos.results) {
+      const trailer = data.videos.results.find((v: any) => v.type === "Trailer" && v.site === "YouTube");
+      if (trailer) {
+        trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
+      }
+    }
+
+    const seasons = data.seasons 
+      ? data.seasons
+          .filter((s: any) => s.season_number > 0)
+          .map((s: any) => ({
+            id: s.id,
+            name: s.name,
+            seasonNumber: s.season_number,
+            episodeCount: s.episode_count,
+            posterUrl: s.poster_path ? `https://image.tmdb.org/t/p/w342${s.poster_path}` : null,
+          }))
+      : [];
+
+    return {
+      ...adaptTMDBMovie({ ...data, media_type: "tv" }),
+      duration: data.episode_run_time?.[0] ? `${data.episode_run_time[0]}m` : "Unknown",
+      trailerUrl,
+      seasons,
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getTVSeasonEpisodes(id: string, seasonNumber: number): Promise<import("@/types/tmdb").TVEpisode[]> {
+  try {
+    const data = await fetchFromTMDB(`/tv/${id}/season/${seasonNumber}`);
+    if (!data.episodes) return [];
+    
+    return data.episodes.map((ep: any) => ({
+      id: ep.id,
+      name: ep.name,
+      overview: ep.overview || "No description available.",
+      episodeNumber: ep.episode_number,
+      seasonNumber: ep.season_number,
+      stillUrl: ep.still_path ? `https://image.tmdb.org/t/p/w500${ep.still_path}` : "https://placehold.co/500x281/141414/FFF?text=No+Image",
+      airDate: ep.air_date || "",
+      runtime: ep.runtime || 0,
+      voteAverage: ep.vote_average ? parseFloat(ep.vote_average.toFixed(1)) : 0,
+    }));
   } catch (error) {
     return [];
   }

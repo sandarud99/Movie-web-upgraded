@@ -13,6 +13,27 @@ export interface Movie {
   type?: string;
   collectionId?: number | null;
   trailerUrl?: string;
+  seasons?: TVSeason[];
+}
+
+export interface TVSeason {
+  id: number;
+  name: string;
+  seasonNumber: number;
+  episodeCount: number;
+  posterUrl: string | null;
+}
+
+export interface TVEpisode {
+  id: number;
+  name: string;
+  overview: string;
+  episodeNumber: number;
+  seasonNumber: number;
+  stillUrl: string | null;
+  airDate: string;
+  runtime: number;
+  voteAverage: number;
 }
 
 export interface CastMember {

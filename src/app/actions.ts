@@ -1,7 +1,7 @@
 "use server";
 
 import { discoverMovies } from "@/lib/tmdb";
-import { Movie } from "@/types/tmdb";
+import { Movie, TVEpisode } from "@/types/tmdb";
 
 export async function loadMoreMovies(filters: Record<string, string>, page: number): Promise<Movie[]> {
   // Ensure the page parameter is passed to TMDB
@@ -41,4 +41,9 @@ export async function fetchMoreHomePageMovies(section: string, category: string 
     default:
       return [];
   }
+}
+
+export async function fetchTVEpisodesAction(showId: string, seasonNumber: number): Promise<TVEpisode[]> {
+  const { getTVSeasonEpisodes } = await import("@/lib/tmdb");
+  return await getTVSeasonEpisodes(showId, seasonNumber);
 }

@@ -79,7 +79,7 @@ export default function CategoryHero({ movies }: CategoryHeroProps) {
               className="flex items-center gap-4"
             >
               <Link
-                href={`/watch/${movie.id}`}
+                href={movie.type === "SERIES" ? `/watch-tv/${movie.id}` : `/watch/${movie.id}`}
                 className="flex items-center justify-center gap-2 bg-brand text-white px-8 py-3 rounded-full font-bold hover:bg-brand/80 transition-all w-auto whitespace-nowrap shadow-[0_0_15px_rgba(229,9,20,0.5)] hover:-translate-y-1"
               >
                 <Play className="w-5 h-5 fill-white" />

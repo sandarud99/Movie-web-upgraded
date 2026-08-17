@@ -198,6 +198,9 @@ export default function ContactPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Gradient transition to match footer color smoothly */}
+      <div className="w-full h-48 bg-gradient-to-b from-transparent to-[#141414] pointer-events-none absolute bottom-0 left-0 z-0" />
     </div>
   );
 }

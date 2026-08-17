@@ -72,11 +72,15 @@ export default function SearchBar() {
     return () => clearTimeout(debounceTimer);
   }, [query]);
 
-  const handleSelect = (movieId: string) => {
+  const handleSelect = (movie: Movie) => {
     setIsOpen(false);
     setIsExpanded(false);
     setQuery("");
-    router.push(`/watch/${movieId}`);
+    if (movie.type === "SERIES") {
+      router.push(`/watch-tv/${movie.id}`);
+    } else {
+      router.push(`/watch/${movie.id}`);
+    }
   };
 
   const handleExpand = () => {
@@ -171,7 +175,7 @@ export default function SearchBar() {
                       {results.map((movie) => (
                         <div
                           key={movie.id}
-                          onClick={() => handleSelect(movie.id)}
+                          onClick={() => handleSelect(movie)}
                           className="flex items-center gap-4 p-3 hover:bg-white/10 transition-colors cursor-pointer rounded-xl mb-2"
                         >
                           <img
@@ -228,7 +232,7 @@ export default function SearchBar() {
               {results.map((movie) => (
                 <div
                   key={movie.id}
-                  onClick={() => handleSelect(movie.id)}
+                  onClick={() => handleSelect(movie)}
                   className="flex items-center gap-4 p-3 hover:bg-white/10 transition-colors cursor-pointer border-b border-white/5 last:border-none"
                 >
                   <img
