@@ -11,7 +11,7 @@ import { CustomDropdown } from "./FilterBar";
 interface CategorySidebarProps {
   title: string;
   items: Movie[]; // Initial server-rendered items (fallback/initial)
-  category: "Movies" | "TV Shows" | "Anime";
+  category: "Movies" | "TV Shows" | "Anime" | "Trending";
 }
 
 export default function CategorySidebar({ title, items, category }: CategorySidebarProps) {
@@ -197,7 +197,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
                     <Star className="w-3 h-3 fill-yellow-500 mr-1" />
                     <span className="text-xs font-bold">{item.rating || "8.5"}</span>
                   </div>
-                  <span className="text-xs text-gray-500 capitalize">{item.type.toLowerCase()}</span>
+                  <span className="text-xs text-gray-500 capitalize">{item.type?.toLowerCase() || "movie"}</span>
                 </div>
               </div>
             </Link>

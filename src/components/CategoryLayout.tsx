@@ -8,7 +8,7 @@ import Link from "next/link";
 
 interface CategoryLayoutProps {
   title: string;
-  category: "Movies" | "TV Shows" | "Anime";
+  category: "Movies" | "TV Shows" | "Anime" | "Trending";
   heroMovies: Movie[];
   gridMovies: Movie[];
   hideGenrePills?: boolean;
