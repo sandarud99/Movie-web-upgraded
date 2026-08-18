@@ -5,7 +5,7 @@ import { TVSeason, TVEpisode } from "@/types/tmdb";
 import { fetchTVEpisodesAction } from "@/app/actions";
 import { ChevronDown, Play, Clock, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface SeasonEpisodesSelectorProps {
   showId: string;
@@ -13,7 +13,16 @@ interface SeasonEpisodesSelectorProps {
 }
 
 export default function SeasonEpisodesSelector({ showId, seasons }: SeasonEpisodesSelectorProps) {
-  const [selectedSeason, setSelectedSeason] = useState<TVSeason | null>(seasons[0] || null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const sParam = searchParams.get('s');
+  const eParam = searchParams.get('e');
+  
+  const initialSeason = sParam 
+    ? seasons.find(s => s.seasonNumber === parseInt(sParam)) || seasons[0] 
+    : seasons[0];
+
+  const [selectedSeason, setSelectedSeason] = useState<TVSeason | null>(initialSeason || null);
   const [episodes, setEpisodes] = useState<TVEpisode[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -117,12 +126,18 @@ export default function SeasonEpisodesSelector({ showId, seasons }: SeasonEpisod
           animate="visible"
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
         >
-          {episodes.map((episode) => (
+          {episodes.map((episode) => {
+            const isPlaying = sParam === episode.seasonNumber.toString() && eParam === episode.episodeNumber.toString();
+            return (
             <motion.div
               key={episode.id}
               variants={itemVariants}
+              onClick={() => {
+                 router.push(`?s=${episode.seasonNumber}&e=${episode.episodeNumber}`, { scroll: false });
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               whileHover={{ scale: 1.03, y: -5 }}
-              className="group cursor-pointer bg-[#141414] rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-colors shadow-lg hover:shadow-2xl flex flex-col"
+              className={`group cursor-pointer bg-[#141414] rounded-2xl overflow-hidden border transition-colors shadow-lg hover:shadow-2xl flex flex-col ${isPlaying ? 'border-brand shadow-[0_0_15px_rgba(229,9,20,0.3)]' : 'border-white/5 hover:border-white/20'}`}
             >
               {/* Thumbnail */}
               <div className="relative aspect-video w-full overflow-hidden bg-gray-900">
@@ -160,7 +175,7 @@ export default function SeasonEpisodesSelector({ showId, seasons }: SeasonEpisod
                 </p>
               </div>
             </motion.div>
-          ))}
+          )})}
           {episodes.length === 0 && (
             <div className="col-span-full py-12 text-center text-gray-500 font-bold">
               No episodes available for this season.

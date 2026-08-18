@@ -9,10 +9,15 @@ import { ArrowLeft } from "lucide-react";
 
 export default async function WatchTVPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
+  const resolvedParams = await searchParams;
+  const season = resolvedParams.s ? parseInt(resolvedParams.s as string) : 1;
+  const episode = resolvedParams.e ? parseInt(resolvedParams.e as string) : 1;
   
   // Fetch data in parallel
   const [show, cast, stills] = await Promise.all([
@@ -56,7 +61,7 @@ export default async function WatchTVPage({
             </div>
           </div>
 
-          <VideoPlayerClient movie={show} />
+          <VideoPlayerClient movie={show} season={season} episode={episode} />
           
           {/* Watch Online Button Overlay (Bottom Left) */}
           <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 lg:left-8 z-20 pointer-events-none opacity-100 lg:group-hover:opacity-0 transition-opacity duration-300">
