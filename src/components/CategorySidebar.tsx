@@ -105,7 +105,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
         <div className="flex flex-col gap-3">
           <div className="relative">
             <CustomDropdown
-              label="Most Popular"
+              label="Sort By"
               value={currentSort}
               options={[
                 { label: "Most Popular", value: "popularity.desc" },
