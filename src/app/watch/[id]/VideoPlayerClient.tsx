@@ -31,11 +31,11 @@ export default function VideoPlayerClient({ movie, season, episode }: VideoPlaye
     }
   }, [movie]);
 
-  let embedUrl = `https://vidapi.xyz/embed/movie/${movie.id}`;
+  let embedUrl = `https://vidsrc.me/embed/movie?tmdb=${movie.id}`;
   if (movie.type === "SERIES") {
     const s = season || 1;
     const e = episode || 1;
-    embedUrl = `https://vidapi.xyz/embed/tv/${movie.id}/${s}/${e}`;
+    embedUrl = `https://vidsrc.me/embed/tv?tmdb=${movie.id}&season=${s}&episode=${e}`;
   }
 
   return (
