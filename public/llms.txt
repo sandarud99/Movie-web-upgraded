@@ -1,0 +1,40 @@
+# 9ineflix
+
+## What is 9ineflix?
+9ineflix is a free online streaming discovery platform where users can watch movies, TV shows, and anime.
+It uses The Movie Database (TMDB) API for metadata and streams content via embedded third-party players.
+
+## Sitemap
+- Homepage: https://9ineflix.com
+- Movies: https://9ineflix.com/movies
+- TV Shows: https://9ineflix.com/tv-shows
+- Anime: https://9ineflix.com/anime
+- Search: https://9ineflix.com/search
+- Watch History: https://9ineflix.com/history
+- About: https://9ineflix.com/about
+- Privacy Policy: https://9ineflix.com/privacy
+- Terms of Service: https://9ineflix.com/terms
+
+## Key Features
+- Browse trending movies, top-rated films, and new releases
+- Watch TV shows with season and episode selectors
+- Anime catalog with Japanese animation content
+- Search across all media types
+- Local watch history stored in browser
+- Mobile-friendly responsive design
+
+## Technical Stack
+- Next.js 16 (App Router)
+- TypeScript
+- Framer Motion for animations
+- TMDB API for movie/show metadata
+- Third-party embed player (vidsrc.me)
+
+## Content Policy
+9ineflix does not host any content. All streams are embedded from third-party sources.
+The platform aggregates publicly available streaming links for educational and discovery purposes.
+
+## Contact & Legal
+- Privacy Policy: https://9ineflix.com/privacy
+- Terms of Service: https://9ineflix.com/terms
+- About: https://9ineflix.com/about
