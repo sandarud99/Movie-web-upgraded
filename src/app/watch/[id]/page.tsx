@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { idFromSlug } from "@/lib/slug";
 
 const BASE_URL = "https://9ineflix.com";
 
@@ -16,7 +17,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id: slug } = await params;
+  const id = idFromSlug(slug);
   const movie = await getMovieDetails(id);
   if (!movie) return { title: "Movie Not Found" };
 
@@ -52,7 +54,8 @@ export default async function WatchPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id: slug } = await params;
+  const id = idFromSlug(slug);
   
   // Fetch data in parallel
   const [movie, cast, stills] = await Promise.all([

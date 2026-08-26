@@ -4,6 +4,7 @@ import { Movie } from "@/types/tmdb";
 import { Star, Film, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
+import { watchUrl } from "@/lib/slug";
 
 interface CollectionTimelineProps {
   collectionName: string;
@@ -85,7 +86,7 @@ export default function CollectionTimeline({ collectionName, movies, currentMovi
             return (
               <Link 
                 key={movie.id} 
-                href={`/watch/${movie.id}`}
+                href={watchUrl(movie.title, movie.id, "MOVIE")}
                 className={`relative flex-shrink-0 flex items-center gap-4 p-3 pr-4 rounded-2xl bg-black border transition-all duration-300 snap-start
                   w-[75vw] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)]
                   ${isPlaying 

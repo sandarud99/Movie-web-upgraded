@@ -7,6 +7,7 @@ import SeasonEpisodesSelector from "@/components/SeasonEpisodesSelector";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { idFromSlug } from "@/lib/slug";
 
 const BASE_URL = "https://9ineflix.com";
 
@@ -15,7 +16,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id: slug } = await params;
+  const id = idFromSlug(slug);
   const show = await getTVShowDetails(id);
   if (!show) return { title: "Show Not Found" };
 
@@ -53,7 +55,8 @@ export default async function WatchTVPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { id } = await params;
+  const { id: slug } = await params;
+  const id = idFromSlug(slug);
   const resolvedParams = await searchParams;
   const season = resolvedParams.s ? parseInt(resolvedParams.s as string) : 1;
   const episode = resolvedParams.e ? parseInt(resolvedParams.e as string) : 1;

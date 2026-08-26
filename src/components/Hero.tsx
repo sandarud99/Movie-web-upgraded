@@ -5,6 +5,7 @@ import { Movie } from "@/types/tmdb";
 import { Play, Info } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { watchUrl } from "@/lib/slug";
 
 interface HeroProps {
   movies: Movie[];
@@ -90,7 +91,7 @@ export default function Hero({ movies }: HeroProps) {
               className="flex items-center gap-4"
             >
               <Link
-                href={movie.type === "SERIES" ? `/watch-tv/${movie.id}` : `/watch/${movie.id}`}
+                href={watchUrl(movie.title, movie.id, movie.type || "MOVIE")}
                 className="flex items-center justify-center gap-2 bg-brand text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition-all w-32 md:w-40 text-lg hover:shadow-[0_0_25px_rgba(229,9,20,0.6)] hover:-translate-y-1"
               >
                 <Play className="w-6 h-6 fill-white" />

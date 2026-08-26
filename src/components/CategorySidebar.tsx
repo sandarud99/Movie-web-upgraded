@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { adaptTMDBMovie } from "@/lib/tmdb";
 import { CustomDropdown } from "./FilterBar";
+import { watchUrl } from "@/lib/slug";
 
 interface CategorySidebarProps {
   title: string;
@@ -169,7 +170,7 @@ export default function CategorySidebar({ title, items, category }: CategorySide
         {/* List Items */}
         <div className={`flex flex-col gap-4 transition-opacity duration-300 ${loading ? 'opacity-50' : 'opacity-100'}`}>
           {topItems.map((item, index) => (
-            <Link key={item.id} href={`/watch/${item.id}`} className="group flex items-center gap-4">
+            <Link key={item.id} href={watchUrl(item.title, item.id, item.type || "MOVIE")} className="group flex items-center gap-4">
               {/* Rank Number */}
               <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center border border-white/10 rounded-md text-gray-400 text-sm font-bold bg-black/30 group-hover:bg-brand group-hover:text-white group-hover:border-brand transition-colors">
                 {index + 1}

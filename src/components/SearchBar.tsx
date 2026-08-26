@@ -7,6 +7,7 @@ import { Movie } from "@/types/tmdb";
 import { searchMoviesAction } from "@/app/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { watchUrl } from "@/lib/slug";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
@@ -76,11 +77,7 @@ export default function SearchBar() {
     setIsOpen(false);
     setIsExpanded(false);
     setQuery("");
-    if (movie.type === "SERIES") {
-      router.push(`/watch-tv/${movie.id}`);
-    } else {
-      router.push(`/watch/${movie.id}`);
-    }
+    router.push(watchUrl(movie.title, movie.id, movie.type || "MOVIE"));
   };
 
   const handleExpand = () => {

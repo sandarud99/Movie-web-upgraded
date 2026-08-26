@@ -4,6 +4,7 @@ import { Movie } from "@/types/tmdb";
 import { Star, Play } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { watchUrl } from "@/lib/slug";
 
 interface HistoryCardProps {
   movie: Movie;
@@ -13,7 +14,7 @@ export default function HistoryCard({ movie }: HistoryCardProps) {
   const rating = movie.rating || ((parseInt(movie.id) % 30) / 10 + 6).toFixed(1);
 
   return (
-    <Link href={`/watch/${movie.id}`}>
+    <Link href={watchUrl(movie.title, movie.id, movie.type || "MOVIE")}>
       <motion.div
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}

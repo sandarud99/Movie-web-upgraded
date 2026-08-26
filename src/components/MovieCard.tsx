@@ -4,6 +4,7 @@ import { Movie } from "@/types/tmdb";
 import { Star, Play } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { watchUrl } from "@/lib/slug";
 
 interface MovieCardProps {
   movie: Movie;
@@ -66,7 +67,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
       {/* Hover Play Overlay */}
       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col justify-center items-center z-10">
-        <Link href={type === "SERIES" ? `/watch-tv/${movie.id}` : `/watch/${movie.id}`}>
+        <Link href={watchUrl(movie.title, movie.id, type)}>
           <div className="bg-brand text-white p-4 rounded-full hover:scale-110 hover:shadow-[0_0_20px_rgba(229,9,20,0.8)] transition-all">
             <Play className="w-8 h-8 fill-white" />
           </div>
