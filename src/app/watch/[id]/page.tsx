@@ -25,7 +25,7 @@ export async function generateMetadata({
   const title = `Watch ${movie.title} (${movie.year}) Free Online`;
   const description = movie.description?.slice(0, 160) || `Watch ${movie.title} online for free on 9ineflix.`;
   const image = movie.backdropUrl || movie.posterUrl || `${BASE_URL}/9ineflix-site-icon.png`;
-  const url = `${BASE_URL}/watch/${id}`;
+  const url = `${BASE_URL}/watch/${slug}`;
 
   return {
     title: `Watch ${movie.title} (${movie.year})`,
