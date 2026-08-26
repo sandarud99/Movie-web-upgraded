@@ -1,6 +1,6 @@
 "use server";
 
-import { discoverMovies } from "@/lib/tmdb";
+import { discoverMovies, searchMulti, getTrendingMovies, getTopRatedMovies, getNewReleases, getTVSeasonEpisodes } from "@/lib/tmdb";
 import { Movie, TVEpisode } from "@/types/tmdb";
 
 export async function loadMoreMovies(filters: Record<string, string>, page: number): Promise<Movie[]> {
@@ -11,7 +11,6 @@ export async function loadMoreMovies(filters: Record<string, string>, page: numb
 
 export async function searchMoviesAction(query: string, page: number = 1, sort?: string, year?: string): Promise<Movie[]> {
   if (!query || query.trim() === "") return [];
-  const { searchMulti } = await import("@/lib/tmdb");
   let results = await searchMulti(query, page);
 
   if (year) {
@@ -30,7 +29,6 @@ export async function searchMoviesAction(query: string, page: number = 1, sort?:
 }
 
 export async function fetchMoreHomePageMovies(section: string, category: string | undefined, page: number): Promise<Movie[]> {
-  const { getTrendingMovies, getTopRatedMovies, getNewReleases } = await import("@/lib/tmdb");
   switch (section) {
     case "trending":
       return await getTrendingMovies(category, page);
@@ -44,6 +42,5 @@ export async function fetchMoreHomePageMovies(section: string, category: string 
 }
 
 export async function fetchTVEpisodesAction(showId: string, seasonNumber: number): Promise<TVEpisode[]> {
-  const { getTVSeasonEpisodes } = await import("@/lib/tmdb");
   return await getTVSeasonEpisodes(showId, seasonNumber);
 }
