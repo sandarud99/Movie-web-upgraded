@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Movie } from "@/types/tmdb";
-import { History, Film, Tv, Info } from "lucide-react";
+import { History, Film, Tv } from "lucide-react";
 import HistoryCard from "@/components/HistoryCard";
 
 export default function HistoryPage() {
@@ -33,13 +33,6 @@ export default function HistoryPage() {
         <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">History</h1>
       </div>
 
-      {/* Info Banner */}
-      <div className="mb-12 flex items-start gap-3 bg-[#0a1526] border border-blue-900/50 p-4 rounded-xl text-blue-200">
-        <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-blue-400" />
-        <p className="text-sm leading-relaxed">
-          <strong className="text-blue-300">Note:</strong> Your watch history is saved locally in your browser, not on our servers. If you clear your browser data or cache, this list will be permanently removed.
-        </p>
-      </div>
 
       {history.length === 0 ? (
         <div className="text-center py-20">
