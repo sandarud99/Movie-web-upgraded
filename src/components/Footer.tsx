@@ -41,7 +41,6 @@ export default function Footer() {
           <Link href="/about" className={`transition-colors ${pathname === '/about' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>About Us</Link>
           <Link href="/privacy" className={`transition-colors ${pathname === '/privacy' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Privacy Policy</Link>
           <Link href="/terms" className={`transition-colors ${pathname === '/terms' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Terms of Service</Link>
-          <Link href="/contact" className={`transition-colors ${pathname === '/contact' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>Contact Us</Link>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-white/10 text-gray-500 text-xs">

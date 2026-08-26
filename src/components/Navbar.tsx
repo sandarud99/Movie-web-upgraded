@@ -61,9 +61,6 @@ export default function Navbar() {
             <Link href="/anime" className={`transition-colors ${pathname === '/anime' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>
               Anime
             </Link>
-            <Link href="/request" className={`transition-colors ${pathname === '/request' ? 'text-brand font-bold drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'hover:text-brand hover:drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]'}`}>
-              Request
-            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4 text-gray-300">
@@ -86,10 +83,6 @@ export default function Navbar() {
             </div>
           </button>
           
-          <Link href="/contact" className="hidden md:flex ml-2 bg-brand text-white px-5 py-2 rounded-full font-semibold hover:bg-brand/80 transition-colors shadow-[0_0_15px_rgba(229,9,20,0.5)] border border-brand text-sm items-center gap-2">
-            Contact
-          </Link>
-
           <button 
             className="md:hidden p-2 text-gray-300 hover:text-white transition-colors ml-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -123,14 +116,8 @@ export default function Navbar() {
               <Link href="/anime" onClick={() => setIsMobileMenuOpen(false)} className={`text-lg font-bold ${pathname === '/anime' ? 'text-brand drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'text-gray-300 hover:text-brand'}`}>
                 Anime
               </Link>
-              <Link href="/request" onClick={() => setIsMobileMenuOpen(false)} className={`text-lg font-bold ${pathname === '/request' ? 'text-brand drop-shadow-[0_0_10px_rgba(229,9,20,0.8)]' : 'text-gray-300 hover:text-brand'}`}>
-                Request
-              </Link>
             </nav>
             <div className="h-px bg-white/10 w-full" />
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full bg-brand text-white py-3 rounded-full font-bold text-center border border-brand shadow-[0_0_15px_rgba(229,9,20,0.5)]">
-              Contact
-            </Link>
           </motion.div>
         )}
       </AnimatePresence>
