@@ -1,5 +1,22 @@
 import CategoryLayout from "@/components/CategoryLayout";
 import { getAnime } from "@/lib/tmdb";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "Anime",
+  description:
+    "Watch the best anime online for free on 9ineflix. From classic series to the latest seasonal releases — all genres covered.",
+  alternates: { canonical: `${BASE_URL}/anime` },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Anime | 9ineflix",
+    description: "Watch the best anime online for free on 9ineflix.",
+    url: `${BASE_URL}/anime`,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix Anime" }],
+  },
+};
 
 export default async function AnimePage({
   searchParams,

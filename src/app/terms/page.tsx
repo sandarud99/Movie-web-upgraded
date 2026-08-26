@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+const BASE_URL = "https://9ineflix.com";
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Read the 9ineflix terms of service to understand the rules and guidelines for using our platform.",
+  alternates: { canonical: `${BASE_URL}/terms` },
+  robots: { index: true, follow: true },
+  openGraph: { title: "Terms of Service | 9ineflix", description: "Read our terms of service.", url: `${BASE_URL}/terms`, images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix" }] },
+};
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#141414] pt-32 pb-24 px-6 md:px-12 lg:px-24">

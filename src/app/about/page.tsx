@@ -1,3 +1,20 @@
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about 9ineflix — your free online streaming destination for movies, TV shows, and anime.",
+  alternates: { canonical: `${BASE_URL}/about` },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "About Us | 9ineflix",
+    description: "Learn about 9ineflix — your free online streaming destination.",
+    url: `${BASE_URL}/about`,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix" }],
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#141414] pt-32 pb-24 px-6 md:px-12 lg:px-24">

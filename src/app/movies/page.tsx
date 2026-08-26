@@ -1,5 +1,23 @@
 import CategoryLayout from "@/components/CategoryLayout";
 import { getMovies } from "@/lib/tmdb";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "Movies",
+  description:
+    "Browse and stream the latest movies online on 9ineflix. Filter by genre, year, and rating to find your next watch.",
+  alternates: { canonical: `${BASE_URL}/movies` },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Movies | 9ineflix",
+    description: "Browse and stream the latest movies on 9ineflix.",
+    url: `${BASE_URL}/movies`,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix Movies" }],
+  },
+};
+
 
 export default async function MoviesPage({
   searchParams,

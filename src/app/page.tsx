@@ -5,6 +5,23 @@ import FilterBar from "@/components/FilterBar";
 import SearchResults from "@/components/SearchResults";
 import { getTrendingMovies, getTopRatedMovies, getNewReleases, discoverMovies } from "@/lib/tmdb";
 import { Movie } from "@/types/tmdb";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "9ineflix | Free Movies & TV Shows Online",
+  description:
+    "Stream thousands of movies, TV shows, and anime for free on 9ineflix. Trending titles, top-rated picks, and new releases — all in one place.",
+  alternates: { canonical: BASE_URL },
+  openGraph: {
+    title: "9ineflix | Free Movies & TV Shows Online",
+    description: "Stream thousands of movies, TV shows, and anime for free on 9ineflix.",
+    url: BASE_URL,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix" }],
+  },
+};
+
 
 export default async function Home({
   searchParams,

@@ -6,6 +6,45 @@ import MovieStills from "@/components/MovieStills";
 import SeasonEpisodesSelector from "@/components/SeasonEpisodesSelector";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const show = await getTVShowDetails(id);
+  if (!show) return { title: "Show Not Found" };
+
+  const title = `Watch ${show.title} Free Online`;
+  const description = show.description?.slice(0, 160) || `Watch ${show.title} online for free on 9ineflix.`;
+  const image = show.backdropUrl || show.posterUrl || `${BASE_URL}/9ineflix-site-icon.png`;
+  const url = `${BASE_URL}/watch-tv/${id}`;
+
+  return {
+    title: `Watch ${show.title}`,
+    description,
+    alternates: { canonical: url },
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "video.tv_show",
+      images: [{ url: image, width: 1280, height: 720, alt: show.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 
 export default async function WatchTVPage({
   params,
@@ -36,7 +75,23 @@ export default async function WatchTVPage({
 
   return (
     <main className="w-full min-h-screen bg-gradient-to-br from-[#130b18] via-[#0a050a] to-[#11050a] overflow-x-hidden font-sans">
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TVSeries",
+            name: show.title,
+            description: show.description,
+            image: show.posterUrl,
+            genre: show.genre,
+            aggregateRating: show.rating
+              ? { "@type": "AggregateRating", ratingValue: show.rating, bestRating: 10, ratingCount: 1000 }
+              : undefined,
+            url: `${BASE_URL}/watch-tv/${show.id}`,
+          }),
+        }}
+      />
       {/* Video Hero Section */}
       <div className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-24 md:pt-32">
         

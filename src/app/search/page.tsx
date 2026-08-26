@@ -2,6 +2,22 @@ import { searchMoviesAction } from "@/app/actions";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SearchGrid from "@/components/SearchGrid";
 import FilterBar from "@/components/FilterBar";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "Search",
+  description: "Search for movies, TV shows, and anime on 9ineflix. Find any title instantly.",
+  alternates: { canonical: `${BASE_URL}/search` },
+  robots: { index: false, follow: true },
+  openGraph: {
+    title: "Search | 9ineflix",
+    description: "Search for movies, TV shows, and anime on 9ineflix.",
+    url: `${BASE_URL}/search`,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix Search" }],
+  },
+};
 
 export default async function SearchPage({
   searchParams,

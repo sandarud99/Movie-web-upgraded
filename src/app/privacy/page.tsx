@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+const BASE_URL = "https://9ineflix.com";
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Read the 9ineflix privacy policy to understand how we handle your data and protect your information.",
+  alternates: { canonical: `${BASE_URL}/privacy` },
+  robots: { index: true, follow: true },
+  openGraph: { title: "Privacy Policy | 9ineflix", description: "Read our privacy policy.", url: `${BASE_URL}/privacy`, images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix" }] },
+};
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#141414] pt-32 pb-24 px-6 md:px-12 lg:px-24">

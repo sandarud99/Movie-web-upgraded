@@ -7,6 +7,45 @@ import MovieStills from "@/components/MovieStills";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const movie = await getMovieDetails(id);
+  if (!movie) return { title: "Movie Not Found" };
+
+  const title = `Watch ${movie.title} (${movie.year}) Free Online`;
+  const description = movie.description?.slice(0, 160) || `Watch ${movie.title} online for free on 9ineflix.`;
+  const image = movie.backdropUrl || movie.posterUrl || `${BASE_URL}/9ineflix-site-icon.png`;
+  const url = `${BASE_URL}/watch/${id}`;
+
+  return {
+    title: `Watch ${movie.title} (${movie.year})`,
+    description,
+    alternates: { canonical: url },
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "video.movie",
+      images: [{ url: image, width: 1280, height: 720, alt: movie.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 
 export default async function WatchPage({
   params,
@@ -38,7 +77,24 @@ export default async function WatchPage({
 
   return (
     <main className="w-full min-h-screen bg-gradient-to-br from-[#130b18] via-[#0a050a] to-[#11050a] overflow-x-hidden font-sans">
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Movie",
+            name: movie.title,
+            description: movie.description,
+            image: movie.posterUrl,
+            datePublished: movie.year?.toString(),
+            genre: movie.genre,
+            aggregateRating: movie.rating
+              ? { "@type": "AggregateRating", ratingValue: movie.rating, bestRating: 10, ratingCount: 1000 }
+              : undefined,
+            url: `${BASE_URL}/watch/${movie.id}`,
+          }),
+        }}
+      />
       {/* Video Hero Section */}
       <div className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-24 md:pt-32">
         
