@@ -91,7 +91,7 @@ export default async function WatchTVPage({
             aggregateRating: show.rating
               ? { "@type": "AggregateRating", ratingValue: show.rating, bestRating: 10, ratingCount: 1000 }
               : undefined,
-            url: `${BASE_URL}/watch-tv/${show.id}`,
+            url: `${BASE_URL}/watch-tv/${slug}`,
           }),
         }}
       />

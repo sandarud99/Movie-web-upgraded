@@ -17,34 +17,31 @@ export default function SpotlightOverlay() {
       return;
     }
 
-    const checkHover = (x: number, y: number) => {
-      // Find the element currently under the mouse coordinates
-      const el = document.elementFromPoint(x, y);
-      setIsHovering(!!el?.closest(".movie-card, .movie-grid"));
-    };
+    let ticking = false;
 
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
-      // Update global CSS variables for the mouse position
-      document.documentElement.style.setProperty("--mouse-x", `${e.clientX}px`);
-      document.documentElement.style.setProperty("--mouse-y", `${e.clientY}px`);
-      checkHover(e.clientX, e.clientY);
-    };
+      const target = e.target as HTMLElement | null;
+      const hoveringCard = !!target?.closest?.(".movie-card, .movie-grid");
+      setIsHovering(hoveringCard);
 
-    const handleScroll = () => {
-      // Re-evaluate what is under the mouse when the page scrolls
-      checkHover(mousePos.current.x, mousePos.current.y);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          document.documentElement.style.setProperty("--mouse-x", `${mousePos.current.x}px`);
+          document.documentElement.style.setProperty("--mouse-y", `${mousePos.current.y}px`);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     const handleToggle = () => setIsEnabled((prev) => !prev);
     
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("toggle-spotlight", handleToggle);
     
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("toggle-spotlight", handleToggle);
     };
   }, [pathname, isEnabled]);

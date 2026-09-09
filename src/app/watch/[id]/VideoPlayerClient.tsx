@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Movie } from "@/types/tmdb";
+import { Loader2 } from "lucide-react";
 
 interface VideoPlayerClientProps {
   movie: Movie;
@@ -10,6 +11,8 @@ interface VideoPlayerClientProps {
 }
 
 export default function VideoPlayerClient({ movie, season, episode }: VideoPlayerClientProps) {
+  const [isIframeLoading, setIsIframeLoading] = useState(true);
+
   useEffect(() => {
     // Save to local watch history
     try {
@@ -39,7 +42,20 @@ export default function VideoPlayerClient({ movie, season, episode }: VideoPlaye
   }
 
   return (
-    <div className="w-full h-full bg-black relative">
+    <div className="w-full h-full bg-black relative overflow-hidden">
+      {/* Loading Skeleton */}
+      {isIframeLoading && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gradient-to-b from-[#141414] to-black">
+          <div className="relative flex items-center justify-center mb-4">
+            <div className="absolute w-20 h-20 bg-brand/20 blur-xl rounded-full animate-pulse" />
+            <Loader2 className="w-10 h-10 text-brand animate-spin relative z-10" />
+          </div>
+          <p className="text-xs font-bold tracking-widest text-gray-400 uppercase animate-pulse">
+            Connecting Stream Server...
+          </p>
+        </div>
+      )}
+
       <iframe 
         src={embedUrl}
         width="100%"
@@ -47,7 +63,8 @@ export default function VideoPlayerClient({ movie, season, episode }: VideoPlaye
         frameBorder="0"
         scrolling="no"
         allowFullScreen
-        className="absolute top-0 left-0 w-full h-full"
+        onLoad={() => setIsIframeLoading(false)}
+        className="absolute top-0 left-0 w-full h-full transition-opacity duration-500"
       />
     </div>
   );

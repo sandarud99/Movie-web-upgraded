@@ -47,7 +47,7 @@ export default async function AnimePage({
   }
 
   const heroAnime = animeList.slice(0, 5);
-  const remainingAnime = animeList.slice(5, 23); // Exactly 18 movies for a 3x6 grid
+  const remainingAnime = animeList.slice(5, 29); // Exactly 24 anime: 6 rows on laptop (4/row) and 4 rows on desktop (6/row)
 
   return (
     <CategoryLayout 

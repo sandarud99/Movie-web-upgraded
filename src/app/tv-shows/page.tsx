@@ -49,7 +49,7 @@ export default async function TVShowsPage({
   }
 
   const heroMovies = moviesList.slice(0, 5);
-  const remainingMovies = moviesList.slice(5, 23); // Exactly 18 movies for a 3x6 grid
+  const remainingMovies = moviesList.slice(5, 29); // Exactly 24 shows: 6 rows on laptop (4/row) and 4 rows on desktop (6/row)
 
   return (
     <CategoryLayout 

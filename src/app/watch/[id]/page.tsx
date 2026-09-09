@@ -94,7 +94,7 @@ export default async function WatchPage({
             aggregateRating: movie.rating
               ? { "@type": "AggregateRating", ratingValue: movie.rating, bestRating: 10, ratingCount: 1000 }
               : undefined,
-            url: `${BASE_URL}/watch/${movie.id}`,
+            url: `${BASE_URL}/watch/${slug}`,
           }),
         }}
       />

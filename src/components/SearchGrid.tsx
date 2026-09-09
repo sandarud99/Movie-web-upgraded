@@ -25,42 +25,11 @@ export default function SearchGrid({ query, initialMovies, sort, year }: SearchG
   const lastQueryRef = useRef(query);
 
   useEffect(() => {
-    if (lastQueryRef.current !== query) {
-      // New search query - completely reset
-      setLoadedMovies(initialMovies);
-      setVisibleCount(21);
-      setPageToFetch(3);
-      setHasMore(initialMovies.length >= 20);
-      lastQueryRef.current = query;
-    } else {
-      // Only filters changed - preserve visible rows by fetching missing pages
-      const fetchMissingPages = async () => {
-        setIsLoading(true);
-        try {
-          let allMovies = [...initialMovies];
-          // If we had already loaded more pages (e.g. pages 3 and 4), fetch them with the new filter!
-          const promises = [];
-          for (let p = 3; p < pageToFetch; p++) {
-            promises.push(searchMoviesAction(query, p, sort, year));
-          }
-          const results = await Promise.all(promises);
-          results.forEach(res => {
-            allMovies = [...allMovies, ...res];
-          });
-          setLoadedMovies(allMovies);
-        } catch (error) {
-          console.error("Failed to fetch missing pages for filter", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      if (pageToFetch > 3) {
-        fetchMissingPages();
-      } else {
-        setLoadedMovies(initialMovies);
-      }
-    }
+    setLoadedMovies(initialMovies);
+    setVisibleCount(21);
+    setPageToFetch(3);
+    setHasMore(initialMovies.length >= 20);
+    lastQueryRef.current = query;
   }, [query, initialMovies, sort, year]);
 
   const handleLoadMore = async () => {
@@ -110,7 +79,7 @@ export default function SearchGrid({ query, initialMovies, sort, year }: SearchG
             transition: { staggerChildren: 0.05 }
           }
         }}
-        className="movie-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6"
+        className="movie-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6"
       >
         {visibleMovies.map((movie, index) => (
           <motion.div

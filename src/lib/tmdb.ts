@@ -47,9 +47,10 @@ export function adaptTMDBMovie(tmdb: TMDBMovie, defaultType: "movie" | "tv" = "m
   const dateStr = tmdb.release_date || tmdb.first_air_date;
   const year = dateStr ? parseInt(dateStr.split("-")[0]) : new Date().getFullYear();
   
-  // Randomly assign quality for visual flair on mock UI
+  // Deterministically assign quality based on ID to eliminate SSR hydration mismatches
   const qualityOptions = ["WEB-RIP", "HD-RIP", "BLURAY"];
-  const quality = qualityOptions[Math.floor(Math.random() * qualityOptions.length)];
+  const numericId = typeof tmdb.id === "number" ? tmdb.id : parseInt(String(tmdb.id)) || 0;
+  const quality = qualityOptions[Math.abs(numericId) % qualityOptions.length];
 
   return {
     id: tmdb.id.toString(),

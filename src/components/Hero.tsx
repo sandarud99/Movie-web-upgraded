@@ -23,19 +23,30 @@ export default function Hero({ movies }: HeroProps) {
     return () => clearInterval(timer);
   }, [movies.length]);
 
+  // Preload next slide backdrop to prevent blank flicker
+  useEffect(() => {
+    if (movies && movies.length > 1) {
+      const nextIdx = (currentIndex + 1) % movies.length;
+      if (movies[nextIdx]?.backdropUrl) {
+        const img = new Image();
+        img.src = movies[nextIdx].backdropUrl;
+      }
+    }
+  }, [currentIndex, movies]);
+
   if (!movies || movies.length === 0) return null;
 
   const movie = movies[currentIndex];
 
   return (
     <div className="relative w-full h-[85vh] md:h-screen bg-black overflow-hidden">
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false}>
         <motion.div
           key={movie.id}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
         >
           <motion.img

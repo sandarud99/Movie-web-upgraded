@@ -9,6 +9,7 @@ It uses The Movie Database (TMDB) API for metadata and streams content via embed
 - Movies: https://9ineflix.com/movies
 - TV Shows: https://9ineflix.com/tv-shows
 - Anime: https://9ineflix.com/anime
+- New & Popular: https://9ineflix.com/new-popular
 - Search: https://9ineflix.com/search
 - Watch History: https://9ineflix.com/history
 - About: https://9ineflix.com/about

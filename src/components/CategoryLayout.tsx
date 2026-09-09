@@ -63,8 +63,8 @@ export default function CategoryLayout({
           
           <h2 className="text-3xl font-black text-white mb-6 font-heading tracking-tight">{title}</h2>
           
-          {/* Custom Grid (no padding, fits container) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 md:gap-6 mb-12">
+          {/* Custom Grid: 4 per row on laptop, 6 per row on desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-12">
             {gridMovies.map((movie, index) => (
               <MovieCard key={`${movie.id}-${index}`} movie={movie} />
             ))}

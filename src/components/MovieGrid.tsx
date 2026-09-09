@@ -16,22 +16,25 @@ interface MovieGridProps {
 
 export default function MovieGrid({ title, movies, section, category }: MovieGridProps) {
   const [loadedMovies, setLoadedMovies] = useState<Movie[]>(movies);
-  const [visibleCount, setVisibleCount] = useState(14);
+  const [visibleCount, setVisibleCount] = useState(18);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadMoreClicks, setLoadMoreClicks] = useState(0);
   // Track which index cards were newly added so we animate them in
   const [newFromIndex, setNewFromIndex] = useState<number>(movies.length);
 
   // Reset state when category or initial movies change
   useEffect(() => {
     setLoadedMovies(movies);
-    setVisibleCount(14);
+    setVisibleCount(18);
     setPage(1);
+    setLoadMoreClicks(0);
     setNewFromIndex(movies.length);
   }, [category, movies]);
 
   const handleLoadMore = async () => {
-    const nextVisibleCount = visibleCount + 14;
+    setLoadMoreClicks((prev) => prev + 1);
+    const nextVisibleCount = visibleCount + 18;
 
     // If we already have enough loaded movies in memory, just increase visibility
     if (nextVisibleCount <= loadedMovies.length) {
@@ -67,7 +70,7 @@ export default function MovieGrid({ title, movies, section, category }: MovieGri
   return (
     <div className="movie-grid px-6 md:px-12 py-8">
       <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-md">{title}</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6">
         {visibleMovies.map((movie, index) => (
           <motion.div
             key={`${movie.id}-${index}`}
@@ -86,8 +89,8 @@ export default function MovieGrid({ title, movies, section, category }: MovieGri
         ))}
       </div>
 
-      {/* Load More Button */}
-      {section && (
+      {/* Load More Button - Only works twice, then hides */}
+      {section && loadMoreClicks < 2 && (
         <div className="mt-12 flex justify-center">
           <button
             onClick={handleLoadMore}

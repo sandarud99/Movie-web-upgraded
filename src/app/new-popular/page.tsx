@@ -1,5 +1,22 @@
 import CategoryLayout from "@/components/CategoryLayout";
 import { discoverMovies } from "@/lib/tmdb";
+import type { Metadata } from "next";
+
+const BASE_URL = "https://9ineflix.com";
+
+export const metadata: Metadata = {
+  title: "New & Popular",
+  description:
+    "Explore the newest and most popular movies and TV shows streaming right now on 9ineflix. Filter by genre, year, and popularity.",
+  alternates: { canonical: `${BASE_URL}/new-popular` },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "New & Popular | 9ineflix",
+    description: "Explore the newest and most popular movies and TV shows on 9ineflix.",
+    url: `${BASE_URL}/new-popular`,
+    images: [{ url: `${BASE_URL}/9ineflix-site-icon.png`, width: 512, height: 512, alt: "9ineflix New & Popular" }],
+  },
+};
 
 export default async function NewPopularPage({
   searchParams,
