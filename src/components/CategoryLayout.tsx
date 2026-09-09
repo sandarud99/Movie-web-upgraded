@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import { Movie } from "@/types/tmdb";
 import Breadcrumbs from "./Breadcrumbs";
 import GenrePills from "./GenrePills";
@@ -25,6 +28,24 @@ export default function CategoryLayout({
   currentPage = 1,
   searchParams = {} 
 }: CategoryLayoutProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState<number>(0);
+
+  useEffect(() => {
+    const updateColumns = () => {
+      if (!gridRef.current) return;
+      const style = window.getComputedStyle(gridRef.current);
+      const gridTemplateColumns = style.getPropertyValue("grid-template-columns");
+      if (gridTemplateColumns) {
+        const colCount = gridTemplateColumns.split(" ").filter(Boolean).length;
+        if (colCount > 0) setColumns(colCount);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
   
   // Helper to build URL with updated page
   const buildPageUrl = (pageNumber: number) => {
@@ -64,11 +85,21 @@ export default function CategoryLayout({
           <h2 className="text-3xl font-black text-white mb-6 font-heading tracking-tight">{title}</h2>
           
           {/* Custom Grid: 4 per row on laptop, 6 per row on desktop */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-12">
-            {gridMovies.map((movie, index) => (
-              <MovieCard key={`${movie.id}-${index}`} movie={movie} />
-            ))}
-          </div>
+          {(() => {
+            const fullRowMovies = columns > 0
+              ? gridMovies.slice(0, Math.floor(gridMovies.length / columns) * columns)
+              : gridMovies;
+            return (
+              <div 
+                ref={gridRef}
+                className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-12"
+              >
+                {fullRowMovies.map((movie, index) => (
+                  <MovieCard key={`${movie.id}-${index}`} movie={movie} />
+                ))}
+              </div>
+            );
+          })()}
 
           {/* Pagination */}
           <div className="flex justify-center items-center gap-2 mt-8">

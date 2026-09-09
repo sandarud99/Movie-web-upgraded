@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Movie } from "@/types/tmdb";
 import MovieCard from "./MovieCard";
 import { loadMoreMovies } from "@/app/actions";
@@ -13,15 +13,34 @@ interface SearchResultsProps {
 
 export default function SearchResults({ initialMovies, filters }: SearchResultsProps) {
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
-  const [visibleCount, setVisibleCount] = useState(28); // Start with exactly 4 rows (4 * 7)
-  const [page, setPage] = useState(3); // Since server fetches page 1 and 2 (40 items total)
+  const [visibleCount, setVisibleCount] = useState(28);
+  const [page, setPage] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMorePages, setHasMorePages] = useState(true);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState<number>(0);
+
+  useEffect(() => {
+    const updateColumns = () => {
+      if (!gridRef.current) return;
+      const style = window.getComputedStyle(gridRef.current);
+      const gridTemplateColumns = style.getPropertyValue("grid-template-columns");
+      if (gridTemplateColumns) {
+        const colCount = gridTemplateColumns.split(" ").filter(Boolean).length;
+        if (colCount > 0) setColumns(colCount);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
 
   const handleLoadMore = async () => {
     setIsLoading(true);
     try {
-      const nextVisibleCount = visibleCount + 14; // Add exactly 2 rows per click
+      const cols = columns > 0 ? columns : 7;
+      const nextVisibleCount = visibleCount + (cols * 2);
       
       let fetchedMovies = [...movies];
       let fetchPage = page;
@@ -49,13 +68,20 @@ export default function SearchResults({ initialMovies, filters }: SearchResultsP
     }
   };
 
-  const visibleMovies = movies.slice(0, visibleCount);
+  const effectiveCount = columns > 0
+    ? Math.max(columns, Math.floor(Math.min(visibleCount, movies.length) / columns) * columns)
+    : visibleCount;
+
+  const visibleMovies = movies.slice(0, effectiveCount);
   const showButton = visibleCount < movies.length || hasMorePages;
 
   return (
     <div className="movie-grid px-6 md:px-12 py-8">
       <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-md">Search Results</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6">
+      <div 
+        ref={gridRef}
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6"
+      >
         {visibleMovies.map((movie, index) => (
           <MovieCard key={`${movie.id}-${index}`} movie={movie} />
         ))}

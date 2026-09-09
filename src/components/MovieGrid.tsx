@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Movie } from "@/types/tmdb";
 import MovieCard from "./MovieCard";
 import { fetchMoreHomePageMovies } from "@/app/actions";
@@ -16,17 +16,35 @@ interface MovieGridProps {
 
 export default function MovieGrid({ title, movies, section, category }: MovieGridProps) {
   const [loadedMovies, setLoadedMovies] = useState<Movie[]>(movies);
-  const [visibleCount, setVisibleCount] = useState(18);
+  const [visibleCount, setVisibleCount] = useState(21);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [loadMoreClicks, setLoadMoreClicks] = useState(0);
-  // Track which index cards were newly added so we animate them in
   const [newFromIndex, setNewFromIndex] = useState<number>(movies.length);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState<number>(0);
+
+  // Dynamically measure active grid columns so rows are always 100% filled
+  useEffect(() => {
+    const updateColumns = () => {
+      if (!gridRef.current) return;
+      const style = window.getComputedStyle(gridRef.current);
+      const gridTemplateColumns = style.getPropertyValue("grid-template-columns");
+      if (gridTemplateColumns) {
+        const colCount = gridTemplateColumns.split(" ").filter(Boolean).length;
+        if (colCount > 0) setColumns(colCount);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
 
   // Reset state when category or initial movies change
   useEffect(() => {
     setLoadedMovies(movies);
-    setVisibleCount(18);
+    setVisibleCount(21);
     setPage(1);
     setLoadMoreClicks(0);
     setNewFromIndex(movies.length);
@@ -34,7 +52,9 @@ export default function MovieGrid({ title, movies, section, category }: MovieGri
 
   const handleLoadMore = async () => {
     setLoadMoreClicks((prev) => prev + 1);
-    const nextVisibleCount = visibleCount + 18;
+    const cols = columns > 0 ? columns : 7;
+    // Add 2 complete rows on each click
+    const nextVisibleCount = visibleCount + (cols * 2);
 
     // If we already have enough loaded movies in memory, just increase visibility
     if (nextVisibleCount <= loadedMovies.length) {
@@ -50,7 +70,7 @@ export default function MovieGrid({ title, movies, section, category }: MovieGri
         const newMovies = await fetchMoreHomePageMovies(section, category, nextPage);
         setLoadedMovies((prev) => {
           const updated = [...prev, ...newMovies];
-          setNewFromIndex(prev.length); // mark where new ones start
+          setNewFromIndex(prev.length);
           return updated;
         });
         setPage(nextPage);
@@ -65,12 +85,20 @@ export default function MovieGrid({ title, movies, section, category }: MovieGri
     }
   };
 
-  const visibleMovies = loadedMovies.slice(0, visibleCount);
+  // Ensure visible count is ALWAYS an exact multiple of columns so the last row is never partially empty
+  const effectiveCount = columns > 0
+    ? Math.max(columns, Math.floor(Math.min(visibleCount, loadedMovies.length) / columns) * columns)
+    : visibleCount;
+
+  const visibleMovies = loadedMovies.slice(0, effectiveCount);
 
   return (
     <div className="movie-grid px-6 md:px-12 py-8">
       <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-md">{title}</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6">
+      <div 
+        ref={gridRef}
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-4 md:gap-6"
+      >
         {visibleMovies.map((movie, index) => (
           <motion.div
             key={`${movie.id}-${index}`}

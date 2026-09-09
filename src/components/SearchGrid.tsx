@@ -16,13 +16,30 @@ interface SearchGridProps {
 
 export default function SearchGrid({ query, initialMovies, sort, year }: SearchGridProps) {
   const [loadedMovies, setLoadedMovies] = useState<Movie[]>(initialMovies);
-  const [visibleCount, setVisibleCount] = useState(21); // 3 rows of 7
-  // We already fetched pages 1 and 2 on the server, so next page to fetch is 3
+  const [visibleCount, setVisibleCount] = useState(21);
   const [pageToFetch, setPageToFetch] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialMovies.length >= 20); // rough heuristic
+  const [hasMore, setHasMore] = useState(initialMovies.length >= 20);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState<number>(0);
 
   const lastQueryRef = useRef(query);
+
+  useEffect(() => {
+    const updateColumns = () => {
+      if (!gridRef.current) return;
+      const style = window.getComputedStyle(gridRef.current);
+      const gridTemplateColumns = style.getPropertyValue("grid-template-columns");
+      if (gridTemplateColumns) {
+        const colCount = gridTemplateColumns.split(" ").filter(Boolean).length;
+        if (colCount > 0) setColumns(colCount);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
 
   useEffect(() => {
     setLoadedMovies(initialMovies);
@@ -33,7 +50,8 @@ export default function SearchGrid({ query, initialMovies, sort, year }: SearchG
   }, [query, initialMovies, sort, year]);
 
   const handleLoadMore = async () => {
-    const nextVisibleCount = visibleCount + 21; // Reveal 3 more rows (21 items)
+    const cols = columns > 0 ? columns : 7;
+    const nextVisibleCount = visibleCount + (cols * 3);
     
     setIsLoading(true);
     try {
@@ -57,7 +75,11 @@ export default function SearchGrid({ query, initialMovies, sort, year }: SearchG
     }
   };
 
-  const visibleMovies = loadedMovies.slice(0, visibleCount);
+  const effectiveCount = columns > 0
+    ? Math.max(columns, Math.floor(Math.min(visibleCount, loadedMovies.length) / columns) * columns)
+    : visibleCount;
+
+  const visibleMovies = loadedMovies.slice(0, effectiveCount);
 
   if (loadedMovies.length === 0) {
     return (
@@ -71,6 +93,7 @@ export default function SearchGrid({ query, initialMovies, sort, year }: SearchG
   return (
     <div className="mb-12">
       <motion.div 
+        ref={gridRef}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
